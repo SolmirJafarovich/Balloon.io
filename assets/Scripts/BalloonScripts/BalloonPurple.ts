@@ -1,90 +1,17 @@
 import { _decorator, Animation, AudioSource, Component, find, Node, Vec3, view } from 'cc';
+import { BalloonBase } from './BalloonBase';
 const { ccclass, property } = _decorator;
 
 @ccclass('BalloonPurple')
-export class BalloonPurple extends Component {
+export class BalloonPurple extends BalloonBase {
 
-    @property({
-        type:Number
-    })
-    speed:number = 210;
+    speed = 210;
+    reward = 2;
 
-    @property({
-        type: Node
-    })
-    public balloon: Node = null;
+    public xSpeed;
 
-    @property({
-        type: Number
-    })
-    public reward: number = 2;
-
-
-    public animation: Animation;
-    private audioSource: AudioSource;
-    public tempStartLocation:Vec3 = new Vec3(0, 0, 0);
-
-    public tempSpeed:number;
-    public xSpeed: number;
-
-    public balloonExist:boolean = true;
-
-    public game;
-
-    randomRange(min, max) {
-        return Math.random() * (max - min) + min;
-    }
-
-    onLoad() {
-
-        this.game = find("GameCtrl").getComponent("GameCtrl");
-
-        if (!this.game) {
-            console.error("GameCtrl not found");
-            return;
-        }
-
-        this.initPos();
-        this.node.on(Node.EventType.TOUCH_START, this.onTouch, this);
-
-        this.animation = this.getComponent(Animation);
-
-        if (!this.animation) {
-            console.error("Animation not found into BalloonPurple");
-        }
-
-        this.audioSource = this.getComponent(AudioSource);
-
-        if (!this.audioSource) {
-            console.error("AudioSource not found into BalloonPurple");
-        }
-    }
-
-    onTouch() {
-        if (this.balloonExist){
-            this.speed = 50;
-            this.popBalloon();
-            this.balloonExist = false;
-        }
-    }
-
-    popBalloon(){
-        if (this.audioSource) {
-            this.audioSource.play(); 
-        }
-        if (this.animation) {
-            this.animation.stop();
-            this.animation.play('PurpleBlop');
-            this.animation.once(Animation.EventType.FINISHED, this.onPopAnimationFinished, this);
-        }
-        else{
-            this.node.destroy();
-        }
-    }
-
-    onPopAnimationFinished(){
-        if (this.game) this.game.addScore(this.reward);
-        this.node.destroy();
+    playAnimation(): void {
+        this.animation.play('PurpleBlop');
     }
 
     initPos(){

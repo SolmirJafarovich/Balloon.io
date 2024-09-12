@@ -1,4 +1,6 @@
 import { _decorator, Animation, AudioSource, Component, find, Node, Vec3, view } from 'cc';
+import { BalloonAnimationHandler } from './BalloonAnimationHandler';
+import { BalloonAudioHandler } from './BalloonAudioHandler';
 const { ccclass, property } = _decorator;
 
 @ccclass('BalloonBase')
@@ -27,7 +29,10 @@ export abstract class BalloonBase extends Component {
     public tempSpeed: number;
     public balloonExist: boolean = true;
 
-    abstract playAnimation() : void;
+    protected animationHandler: BalloonAnimationHandler;
+    protected audioHandler: BalloonAudioHandler;
+
+    abstract getAnimationName(): string;
 
     onLoad() {
         this.game = find("GameCtrl").getComponent("GameCtrl");
@@ -41,16 +46,16 @@ export abstract class BalloonBase extends Component {
 
         this.node.on(Node.EventType.TOUCH_START, this.onTouch, this);
 
-        this.animation = this.getComponent(Animation);
-
-        if (!this.animation) {
-            console.error("Animation not found");
+        this.animationHandler = this.getComponent(BalloonAnimationHandler);
+        if (!this.animationHandler) {
+            console.error("animationHandler not found");
+            return;
         }
 
-        this.audioSource = this.getComponent(AudioSource);
-
-        if (!this.audioSource) {
-            console.error("AudioSource not found");
+        this.audioHandler = this.getComponent(BalloonAudioHandler);
+        if (!this.audioHandler) {
+            console.error("audioHandler not found");
+            return;
         }
     }
 
@@ -74,15 +79,14 @@ export abstract class BalloonBase extends Component {
     }
 
     popBalloon(){
-        if (this.audioSource) {
-            this.audioSource.play(); 
+        if (this.audioHandler) {
+            this.audioHandler.play();
         }
-        if (this.animation) {
-            this.animation.stop();
-            this.playAnimation();
-            this.animation.once(Animation.EventType.FINISHED, this.onPopAnimationFinished, this);
-        }
-        else{
+        if (this.animationHandler) {
+            this.animationHandler.stop();
+            this.animationHandler.play(this.getAnimationName());
+            this.animationHandler.onAnimationEnd(() => this.onPopAnimationFinished());
+        } else {
             this.node.destroy();
         }
     }

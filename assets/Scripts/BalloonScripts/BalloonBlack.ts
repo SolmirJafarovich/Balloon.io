@@ -1,4 +1,4 @@
-import { _decorator, Animation } from 'cc';
+import { _decorator } from 'cc';
 import { BalloonBase } from './BalloonBase';
 const { ccclass, property } = _decorator;
 
@@ -8,17 +8,17 @@ export class BalloonBlack extends BalloonBase {
     speed = 150;
     reward = 0;
 
-    playAnimation(): void {
-        this.animation.play('BlackBlop');
+    getAnimationName(): string {
+        return 'BlackBlop';
     }
-
+    
     protected onPopAnimationFinished(): void {
         if (this.game) {
             this.game.endGame(1);  
         }
         this.node.destroy();  
     }
-
+    
     protected onBalloonMissed(): void {
         this.node.destroy();
     }

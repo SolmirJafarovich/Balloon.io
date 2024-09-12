@@ -10,9 +10,10 @@ export class BalloonPurple extends BalloonBase {
 
     public xSpeed;
 
-    playAnimation(): void {
-        this.animation.play('PurpleBlop');
+    getAnimationName(): string {
+        return 'PurpleBlop';
     }
+
 
     initPos(){
         const randomX = this.randomRange(-view.getVisibleSize().width / 2.5, view.getVisibleSize().width / 4.5);

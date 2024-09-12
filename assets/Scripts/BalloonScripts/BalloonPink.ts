@@ -8,9 +8,10 @@ export class BalloonPink extends BalloonBase {
     speed = 200;
     reward = 2;
 
-    playAnimation(): void {
-        this.animation.play('PinkBlop');
+    getAnimationName(): string {
+        return 'PinkBlop';
     }
+
 }
 
 

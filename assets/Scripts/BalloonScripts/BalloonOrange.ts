@@ -10,9 +10,10 @@ export class BalloonOrange extends BalloonBase {
 
     public fell:boolean = false;
 
-    playAnimation(): void {
-        this.animation.play('OrangeBlop');
+    getAnimationName(): string {
+        return 'OrangeBlop';
     }
+
 
     update(deltaTime) {
 

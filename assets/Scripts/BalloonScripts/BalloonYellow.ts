@@ -8,8 +8,9 @@ export class BalloonYellow extends BalloonBase {
     speed = 100;
     reward = 2;
 
-    playAnimation(): void {
-        this.animation.play('YellowBlop');
+
+    getAnimationName(): string {
+        return 'YellowBlop';
     }
 
     update(deltaTime) {

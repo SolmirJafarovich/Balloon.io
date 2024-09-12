@@ -8,8 +8,8 @@ export class BalloonGreen extends BalloonBase {
     speed = 300;
     reward = -10;
 
-    playAnimation(): void {
-        this.animation.play('GreenBlop');
+    getAnimationName(): string {
+        return 'GreenBlop';
     }
 
     protected onBalloonMissed(): void {

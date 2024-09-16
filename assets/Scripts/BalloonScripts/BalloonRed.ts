@@ -1,0 +1,16 @@
+import { _decorator } from 'cc';
+import { BalloonBase } from './BalloonBase';
+const { ccclass, property } = _decorator;
+
+@ccclass('BalloonRed')
+export class BalloonRed extends BalloonBase {
+
+    speed = 200;
+    reward = 1;
+    
+    getAnimationName(): string {
+        return 'RedBlop';
+    }
+
+}
+

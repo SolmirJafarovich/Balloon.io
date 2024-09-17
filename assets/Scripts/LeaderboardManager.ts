@@ -1,20 +1,12 @@
-import { _decorator, Button, Component, EditBox, instantiate, Label, Node, Prefab } from 'cc';
+import { _decorator, Button, Component, EditBox, Node, Prefab } from 'cc';
 const { ccclass, property } = _decorator;
 
 import { GameCtrl } from './GameCtrl';
+import { LeaderboardService } from './LeaderboardService';
+import { LeaderboardUI } from './LeaderboardUI';
 
 @ccclass('LeaderboardManager')
 export class LeaderboardManager extends Component {
-
-    @property({
-        type:Prefab
-    })
-    playerRowPrefab: Prefab = null;
-
-    @property({
-        type: Node
-    })
-    leaderboardContainer: Node = null;
 
     @property({
         type:EditBox
@@ -45,10 +37,14 @@ export class LeaderboardManager extends Component {
         type: Node
     })
     public gameCtrlNode: Node = null;
+
+    @property(LeaderboardUI)
+    leaderboardUI: LeaderboardUI = null;  // Ссылка на UI компонент
+
+
     private gameCtrl: GameCtrl = null;
+    private leaderboardService: LeaderboardService = new LeaderboardService();
 
-
-    private scores: {name: string, score: number }[] = [];
 
     onLoad(){
 
@@ -56,16 +52,6 @@ export class LeaderboardManager extends Component {
 
         if (!this.gameCtrl) {
             console.error("GameCtrl is not set!");
-            return;
-        }
-
-        if (!this.playerRowPrefab) {
-            console.error("Player Row Prefab is not set!");
-            return;
-        }
-
-        if (!this.leaderboardContainer) {
-            console.error("Leaderboard Container is not set!");
             return;
         }
 
@@ -79,11 +65,10 @@ export class LeaderboardManager extends Component {
             return;
         }
 
+        this.leaderboardService.addScore("BBQ", 513);
 
-        this.scores.push({name: "BBQ", score: 513});
-
-
-        this.updateLeaderboard();
+        // Инициализация LeaderboardUI с сервисом
+        this.leaderboardUI.init(this.leaderboardService);
 
         this.submitButton.node.on('click', this.onSubmitClicked, this);
 
@@ -91,30 +76,9 @@ export class LeaderboardManager extends Component {
 
     }
 
-    updateLeaderboard(){
-        this.leaderboardContainer.removeAllChildren();
-
-        this.scores.sort((a, b) => b.score - a.score);
-
-        this.scores = this.scores.slice(0, 10);
-
-        for (let i = 0; i < this.scores.length; i++){
-            const playerData = this.scores[i];
-
-            let newPlayerRow = instantiate(this.playerRowPrefab);
-            this.leaderboardContainer.addChild(newPlayerRow);
-
-            let playerRank = newPlayerRow.getChildByName('RankContainer').getChildByName('PlayerRank').getComponent(Label);
-            playerRank.string = (i + 1).toString(); 
-            newPlayerRow.getChildByName('NameContainer').getChildByName('PlayerName').getComponent(Label).string = playerData.name;
-            newPlayerRow.getChildByName('ScoreContainer').getChildByName('PlayerScore').getComponent(Label).string = playerData.score.toString();
-
-        }
-    }
-
-    addScore(name:string, score:number){
-        this.scores.push({name, score});
-        this.updateLeaderboard();
+    init(service: LeaderboardService) {
+        this.leaderboardService = service;
+        this.leaderboardUI.init(service);  // Инициализация UI с сервисом
     }
 
     onSubmitClicked(){
@@ -126,9 +90,11 @@ export class LeaderboardManager extends Component {
             return;
         }
 
-        this.addScore(playerName, playerScore);
+        this.leaderboardService.addScore(playerName, playerScore);
         this.nameInputHub.active = false;
         this.playButton.node.active = true;
+
+        this.leaderboardUI.updateLeaderboard();
 
         //this.nameInput.string = "";
         if (this.gameCtrl) {

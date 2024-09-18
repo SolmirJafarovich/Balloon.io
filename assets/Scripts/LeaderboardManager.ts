@@ -1,4 +1,4 @@
-import { _decorator, Button, Component, EditBox, Node, Prefab } from 'cc';
+import { _decorator, Button, Component, EditBox, Node } from 'cc';
 const { ccclass, property } = _decorator;
 
 import { GameCtrl } from './GameCtrl';
@@ -44,6 +44,7 @@ export class LeaderboardManager extends Component {
 
     private gameCtrl: GameCtrl = null;
     private leaderboardService: LeaderboardService = new LeaderboardService();
+    
 
 
     onLoad(){

@@ -25,14 +25,9 @@ export class UIManager extends Component {
     public catalogOpen: Node = null;
 
     @property({
-        type: Node
+        type: [Node]
     })
-    public deathScreen: Node = null;
-
-    @property({
-        type: Node
-    })
-    public deathScreenBlackBalloon: Node = null;
+    public deathScreens: Node [] = [];
 
     showStartScreen() {
         this.userInterface.active = true;
@@ -42,20 +37,14 @@ export class UIManager extends Component {
     }
 
     showDeathScreen(code: number) {
-        switch (code) {
-            case 0:
-                this.deathScreen.active = true;
-                break;
-            case 1:
-                this.deathScreenBlackBalloon.active = true;
-                break;
-        }
+        this.deathScreens[code].active = true;
     }
 
     hideAllScreens() {
         this.userInterface.active = false;
-        this.deathScreen.active = false;
-        this.deathScreenBlackBalloon.active = false;
+        for (const deathScreen of this.deathScreens) {
+            deathScreen.active = false;
+        }
         this.catalogOpen.active = false;
     }
 }

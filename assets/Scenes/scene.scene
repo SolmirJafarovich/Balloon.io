@@ -6240,12 +6240,14 @@
     "catalogOpen": {
       "__id__": 46
     },
-    "deathScreen": {
-      "__id__": 52
-    },
-    "deathScreenBlackBalloon": {
-      "__id__": 98
-    },
+    "deathScreens": [
+      {
+        "__id__": 52
+      },
+      {
+        "__id__": 98
+      }
+    ],
     "_id": "a9ZJ50779K1rgink7UFNp5"
   },
   {

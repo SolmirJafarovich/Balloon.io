@@ -7,30 +7,30 @@ const { ccclass, property } = _decorator;
 export abstract class BalloonBase extends Component {
 
     @property({ type: Number })
-    speed: number = 200; // Скорость движения шара
+    speed: number = 200; // Balloon movement speed
 
     @property({ type: Node })
-    public balloon: Node = null; // Узел шара
+    public balloon: Node = null; // Balloon node
 
     @property({ type: Number })
-    public reward: number = 1; // Количество очков за лопание шара
+    public reward: number = 1; // Points awarded for popping the balloon
 
-    protected game; // Ссылка на контроллер игры
-    public animation: Animation; // Анимация шара
-    public audioSource: AudioSource; // Аудио для шара
-    public tempStartLocation: Vec3 = new Vec3(0, 0, 0); // Временная позиция шара
-    public tempSpeed: number; // Временная скорость шара
-    public balloonExist: boolean = true; // Флаг, указывающий, существует ли шар
+    protected game; // Reference to the game controller
+    public animation: Animation; // Balloon animation
+    public audioSource: AudioSource; // Balloon audio
+    public tempStartLocation: Vec3 = new Vec3(0, 0, 0); // Temporary position of the balloon
+    public tempSpeed: number; // Temporary balloon speed
+    public balloonExist: boolean = true; // Flag indicating if the balloon still exists
 
-    protected animationHandler: BalloonAnimationHandler; // Обработчик анимации
-    protected audioHandler: BalloonAudioHandler; // Обработчик звуков
+    protected animationHandler: BalloonAnimationHandler; // Animation handler
+    protected audioHandler: BalloonAudioHandler; // Audio handler
 
-    // Абстрактный метод для получения имени анимации шара. Реализуется в дочерних классах.
+    // Abstract method to get the balloon's animation name. Implemented in subclasses.
     abstract getAnimationName(): string;
 
-    // Метод, который вызывается при загрузке компонента
+    // Method called when the component is loaded
     onLoad() {
-        // Получаем ссылку на контроллер игры
+        // Get reference to the game controller
         this.game = find("GameCtrl").getComponent("GameCtrl");
 
         if (!this.game) {
@@ -38,20 +38,20 @@ export abstract class BalloonBase extends Component {
             return;
         }
 
-        // Инициализируем позицию шара
+        // Initialize balloon position
         this.initPos();
 
-        // Назначаем обработчик события касания для шара
+        // Set up touch event handler for the balloon
         this.node.on(Node.EventType.TOUCH_START, this.onTouch, this);
 
-        // Получаем обработчик анимации
+        // Get the animation handler
         this.animationHandler = this.getComponent(BalloonAnimationHandler);
         if (!this.animationHandler) {
             console.error("animationHandler not found");
             return;
         }
 
-        // Получаем обработчик звука
+        // Get the audio handler
         this.audioHandler = this.getComponent(BalloonAudioHandler);
         if (!this.audioHandler) {
             console.error("audioHandler not found");
@@ -59,21 +59,21 @@ export abstract class BalloonBase extends Component {
         }
     }
 
-    // Метод для инициализации начальной позиции шара
+    // Method to initialize the balloon's starting position
     protected initPos() {
         const randomX = this.randomRange(-view.getVisibleSize().width / 2.2, view.getVisibleSize().width / 2.5);
         this.tempStartLocation = new Vec3(randomX, -view.getVisibleSize().height / 2, 0); 
 
-        // Устанавливаем позицию шара
+        // Set the balloon's position
         this.balloon.setPosition(this.tempStartLocation);
     }
 
-    // Метод для генерации случайного числа в диапазоне от min до max
+    // Method to generate a random number between min and max
     randomRange(min, max) {
         return Math.random() * (max - min) + min;
     }
 
-    // Метод, вызываемый при касании шара
+    // Method called when the balloon is touched
     onTouch() {
         if (this.balloonExist) {
             this.speed = 50;
@@ -82,7 +82,7 @@ export abstract class BalloonBase extends Component {
         }
     }
 
-    // Метод для обработки лопания шара
+    // Method to handle balloon popping
     popBalloon() {
         if (this.audioHandler) {
             this.audioHandler.play();
@@ -92,31 +92,31 @@ export abstract class BalloonBase extends Component {
             this.animationHandler.play(this.getAnimationName()); 
             this.animationHandler.onAnimationEnd(() => this.onPopAnimationFinished());
         } else {
-            // Если обработчика анимации нет, просто уничтожаем объект
+            // If there's no animation handler, just destroy the object
             this.node.destroy();
         }
     }
 
-    // Метод, вызываемый по завершению анимации лопания шара
+    // Method called when the pop animation is finished
     protected onPopAnimationFinished(): void {
         if (this.game) this.game.addScore(this.reward); 
         this.node.destroy(); 
     }
 
-    // Метод для обновления положения шара на экране (вызывается каждый кадр)
+    // Method to update the balloon's position on screen (called every frame)
     protected update(deltaTime: number) {
         this.tempSpeed = this.speed * deltaTime;
         this.tempStartLocation = this.balloon.position; 
         this.tempStartLocation.y += this.tempSpeed; 
         this.balloon.setPosition(this.tempStartLocation); 
 
-        // Проверяем, вышел ли шар за пределы экрана
+        // Check if the balloon has gone off-screen
         if (this.balloon.position.y > view.getVisibleSize().height * 1.1) {
             if (this.game) this.onBalloonMissed(); 
         }
     }
 
-    // Метод, вызываемый, если шар пропущен (вышел за экран)
+    // Method called if the balloon is missed (goes off-screen)
     protected onBalloonMissed(): void {
         if (this.game) this.game.endGame(0);
         this.node.destroy(); 

@@ -5,23 +5,23 @@ const { ccclass, property } = _decorator;
 @ccclass('BalloonGreen')
 export class BalloonGreen extends BalloonBase {
 
-    // Скорость перемещения зеленого шара
+    // Movement speed of the green balloon
     speed = 300;
 
-    // Награда за лопание шара, в данном случае отрицательная (-10)
+    // Reward for popping the balloon, in this case, negative (-10)
     reward = -10;
 
     /**
-     * Возвращает имя анимации для зеленого воздушного шара
-     * @returns Имя анимации
+     * Returns the animation name for the green balloon
+     * @returns Name of the animation
      */
     getAnimationName(): string {
         return 'GreenBlop';
     }
 
     /**
-     * Вызывается, когда шар не был лопнут и пропущен
-     * Уничтожает шар
+     * Called when the balloon is missed (not popped)
+     * Destroys the balloon
      */
     protected onBalloonMissed(): void {
         this.node.destroy();

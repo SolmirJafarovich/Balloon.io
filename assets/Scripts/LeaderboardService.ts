@@ -4,30 +4,30 @@ const { ccclass, property } = _decorator;
 @ccclass('LeaderboardService')
 export class LeaderboardService {
 
-    // Массив для хранения данных игроков (имя и очки)
+    // Array to store player data (name and score)
     private scores: { name: string, score: number }[] = [];
 
     /**
-     * Добавление нового игрока в таблицу лидеров.
+     * Adds a new player to the leaderboard.
      * 
-     * @param name - Имя игрока
-     * @param score - Очки игрока
+     * @param name - Player's name
+     * @param score - Player's score
      */
     addScore(name: string, score: number): void {
-        // Добавляем нового игрока в массив с результатами
+        // Add the new player to the scores array
         this.scores.push({ name, score });
 
-        // Сортируем игроков по количеству очков в порядке убывания
+        // Sort players by score in descending order
         this.scores.sort((a, b) => b.score - a.score);
 
-        // Ограничиваем список топ 10 игроками
+        // Limit the list to the top 10 players
         this.scores = this.scores.slice(0, 10);
     }
 
     /**
-     * Возвращает список текущих лидеров (топ 10).
+     * Returns the current leaderboard (top 10).
      * 
-     * @returns - Массив объектов с именами и очками игроков
+     * @returns - Array of objects with player names and scores
      */
     getScores(): { name: string, score: number }[] {
         return this.scores;

@@ -5,34 +5,34 @@ const { ccclass, property } = _decorator;
 @ccclass('BalloonBlack')
 export class BalloonBlack extends BalloonBase {
 
-    // Скорость движения чёрного шара
+    // Movement speed of the black balloon
     speed = 150;
 
-    // Награда за лопание чёрного шара (в данном случае 0)
+    // Reward for popping the black balloon (in this case, 0)
     reward = 0;
 
     /**
-     * Возвращает имя анимации для чёрного шара
-     * @returns Имя анимации
+     * Returns the animation name for the black balloon
+     * @returns Name of the animation
      */
     getAnimationName(): string {
         return 'BlackBlop';
     }
 
     /**
-     * Обработчик окончания анимации лопания
-     * Заканчивает игру, если чёрный шар лопнул
+     * Handler for when the pop animation finishes
+     * Ends the game if the black balloon is popped
      */
     protected onPopAnimationFinished(): void {
         if (this.game) {
-            this.game.endGame(1);  // Логика завершения игры (проигрыш)
+            this.game.endGame(1);  // Logic for ending the game (loss)
         }
-        this.node.destroy();  // Уничтожает узел, когда анимация завершена
+        this.node.destroy();  // Destroys the node when the animation finishes
     }
 
     /**
-     * Обработчик, если шар не был лопнут
-     * Уничтожает узел, если шар пропущен
+     * Handler if the balloon is missed
+     * Destroys the node if the balloon is missed
      */
     protected onBalloonMissed(): void {
         this.node.destroy();

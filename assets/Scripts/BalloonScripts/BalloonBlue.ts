@@ -5,15 +5,15 @@ const { ccclass, property } = _decorator;
 @ccclass('BalloonBlue')
 export class BalloonBlue extends BalloonBase {
 
-    // Скорость движения синего шара
+    // Movement speed of the blue balloon
     speed = 300;
 
-    // Награда за лопание синего шара
+    // Reward for popping the blue balloon
     reward = 1;
 
     /**
-     * Возвращает имя анимации для синего шара
-     * @returns Имя анимации
+     * Returns the animation name for the blue balloon
+     * @returns Name of the animation
      */
     getAnimationName(): string {
         return 'BlueBlop';

@@ -5,42 +5,42 @@ const { ccclass, property } = _decorator;
 @ccclass('BalloonYellow')
 export class BalloonYellow extends BalloonBase {
 
-    // Скорость подъема воздушного шара
+    // The rising speed of the balloon
     speed = 100;
 
-    // Награда за уничтожение воздушного шара
+    // Reward for popping the balloon
     reward = 2;
 
     /**
-     * Возвращает имя анимации для желтого воздушного шара
-     * @returns Имя анимации
+     * Returns the animation name for the yellow balloon
+     * @returns Name of the animation
      */
     getAnimationName(): string {
         return 'YellowBlop';
     }
 
     /**
-     * Обновляет положение воздушного шара каждый кадр
-     * @param deltaTime - Время, прошедшее с последнего кадра
+     * Updates the balloon's position every frame
+     * @param deltaTime - Time elapsed since the last frame
      */
     update(deltaTime) {
 
-        // Расчет временной скорости движения шара
+        // Calculate the temporary speed of the balloon
         this.tempSpeed = this.speed * deltaTime;
 
-        // Увеличение скорости шара с течением времени
+        // Increase the balloon's speed over time
         this.speed += 1 * deltaTime;
 
-        // Получение текущего положения шара
+        // Get the current position of the balloon
         this.tempStartLocation = this.balloon.position;
 
-        // Обновление положения шара
+        // Update the balloon's position
         this.tempStartLocation.y += this.tempSpeed;
 
-        // Установка нового положения шара
+        // Set the new position of the balloon
         this.balloon.setPosition(this.tempStartLocation);
 
-        // Проверка, вышел ли шар за границы видимой области
+        // Check if the balloon has gone out of bounds
         if (this.balloon.position.y > view.getVisibleSize().height * 1.1) {
             if (this.game) this.game.endGame(0);
             this.node.destroy();

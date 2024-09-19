@@ -5,53 +5,53 @@ const { ccclass, property } = _decorator;
 @ccclass('BalloonOrange')
 export class BalloonOrange extends BalloonBase {
 
-    // Начальная скорость движения воздушного шара
+    // Initial movement speed of the balloon
     speed = 200;
 
-    // Награда за уничтожение оранжевого воздушного шара
+    // Reward for popping the orange balloon
     reward = 1;
 
-    // Флаг, указывающий, падал ли воздушный шар
+    // Flag indicating whether the balloon has started falling
     public fell: boolean = false;
 
     /**
-     * Возвращает имя анимации для оранжевого воздушного шара
-     * @returns Имя анимации
+     * Returns the animation name for the orange balloon
+     * @returns Name of the animation
      */
     getAnimationName(): string {
         return 'OrangeBlop';
     }
 
     /**
-     * Обновляет положение воздушного шара каждую итерацию кадра
-     * @param deltaTime Время, прошедшее с последнего кадра
+     * Updates the balloon's position every frame
+     * @param deltaTime Time passed since the last frame
      */
     update(deltaTime) {
 
-        // Рассчитываем скорость движения шара
+        // Calculate the balloon's movement speed
         this.tempSpeed = this.speed * deltaTime;
 
-        // Получаем текущее положение шара
+        // Get the balloon's current position
         this.tempStartLocation = this.balloon.position;
 
-        // Увеличиваем координату Y для перемещения шара вверх
+        // Increase the Y coordinate to move the balloon upward
         this.tempStartLocation.y += this.tempSpeed;
 
-        // Обновляем позицию шара
+        // Update the balloon's position
         this.balloon.setPosition(this.tempStartLocation);
 
-        // Если шар поднимается на высоту экрана, он начинает падать
+        // If the balloon reaches half the screen height, it starts falling
         if (this.balloon.position.y > view.getVisibleSize().height * 0.5 && !this.fell) {
-            this.speed = -300;  // Шар начинает падать
-            this.fell = true;   // Отмечаем, что шар упал
+            this.speed = -300;  // Balloon starts falling
+            this.fell = true;   // Mark that the balloon has fallen
         }
 
-        // Если шар падает и достигает середины экрана, он снова начинает подниматься
+        // If the balloon is falling and reaches the middle of the screen, it starts rising again
         if (this.balloon.position.y < 0 && this.fell) {
-            this.speed = 400;  // Шар снова поднимается
+            this.speed = 400;  // Balloon starts rising again
         }
 
-        // Если шар выходит за верхнюю границу экрана, игра заканчивается
+        // If the balloon moves above the top of the screen, the game ends
         if (this.balloon.position.y > view.getVisibleSize().height * 1.1) {
             if (this.game) this.game.endGame(0);
             this.node.destroy();

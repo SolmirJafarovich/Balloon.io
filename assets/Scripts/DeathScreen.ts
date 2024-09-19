@@ -4,62 +4,62 @@ const { ccclass, property } = _decorator;
 @ccclass('DeathScreen')
 export class DeathScreen extends Component {
 
-    // Кнопка для взаимодействия на экране смерти (например, для перезапуска игры)
+    // Button for interaction on the death screen (e.g., to restart the game)
     @property({
         type: Button
     })
     public deathScreenButton: Button = null;
 
-    // Узел, представляющий сам экран смерти
+    // Node representing the death screen itself
     @property({
         type: Node
     })
     public deathScreen: Node = null;
 
-    // Главный узел пользовательского интерфейса (UI)
+    // Main UI node
     @property({
         type: Node
     })
     public userInterface: Node = null;
 
-    // Узел кнопки старта игры
+    // Node for the start game button
     @property({
         type: Node
     })
     public startButton: Node = null;
 
-    // Узел для хаба ввода имени игрока
+    // Node for the player name input hub
     @property({
         type: Node
     })
     public nameInputHub: Node = null;
 
-    // Узел для открытия каталога шаров
+    // Node for opening the balloon catalog
     @property({
         type: Node
     })
     public catalogOpen: Node = null;
 
-    // Метод, вызываемый при загрузке компонента. Добавляется обработчик клика для кнопки экрана смерти.
+    // Method called when the component is loaded. Adds a click handler for the death screen button.
     onLoad() {
         this.deathScreenButton.node.on('click', this.onButtonClicked, this);
     }
 
-    // Обработчик клика по кнопке. Скрывает экран смерти и активирует основной интерфейс.
+    // Click handler for the button. Hides the death screen and activates the main UI.
     onButtonClicked() {
-        // Скрываем экран смерти
+        // Hide the death screen
         this.deathScreen.active = false;
         
-        // Активируем главный UI
+        // Show the main UI
         this.userInterface.active = true;
         
-        // Деактивируем кнопку старта
+        // Deactivate the start button
         this.startButton.active = false;
 
-        // Активируем хаб для ввода имени пользователя
+        // Show the player name input hub
         this.nameInputHub.active = true;
 
-        // Активируем возможность открыть каталог шаров
+        // Enable the balloon catalog
         this.catalogOpen.active = true;
     }
 }

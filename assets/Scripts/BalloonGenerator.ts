@@ -4,66 +4,63 @@ const { ccclass, property } = _decorator;
 @ccclass('BalloonGenerator')
 export class BalloonGenerator extends Component {
 
-    // Список префабов воздушных шаров, которые можно создать
+    // List of balloon prefabs to be created
     @property({
         type: [Prefab]
     })
     public balloonPrefabs: Prefab[] = [];
 
-    // Узел, в который будут добавляться созданные шары
+    // Node where the balloons will be added
     @property({
         type: Node
     })
     public ParentNode: Node = null;
 
-    // Интервал между созданием воздушных шаров
+    // Interval between creating balloons
     @property({
         type: Number
     })
     public spawnInterval: number = 0.7;
 
     /**
-     * Метод, вызываемый при старте компонента.
-     * Запускает создание воздушных шаров с заданным интервалом.
+     * Method called when the component starts.
+     * Starts balloon creation at the specified interval.
      */
     start() {
         this.schedule(this.spawnBalloon, this.spawnInterval);
     }
 
     /**
-     * Метод для создания нового воздушного шара.
-     * Выбирает случайный префаб, создаёт его и добавляет на сцену.
+     * Method to create a new balloon.
+     * Selects a random prefab, creates it, and adds it to the scene.
      */
     spawnBalloon() {
-        // Выбор случайного префаба из списка
         const randomIdx = Math.floor(Math.random() * this.balloonPrefabs.length);
         const randomPrefab = this.balloonPrefabs[randomIdx];
 
-        // Создание новой копии префаба
         const newBalloon = instantiate(randomPrefab);
         
         newBalloon.setPosition(new Vec3(0, 0, 0));
 
-        // Добавление шара в родительский узел
         this.ParentNode.addChild(newBalloon);
     }
 
     /**
-     * Метод для перезапуска генерации воздушных шаров.
-     * Останавливает текущее создание, очищает родительский узел и перезапускает создание с начальным интервалом.
+     * Method to restart balloon generation.
+     * Stops current generation, clears the parent node, and restarts with the initial interval.
      */
     restart() {
-        this.unschedule(this.spawnBalloon);  // Останавливаем текущее создание
-        this.ParentNode.removeAllChildren(); // Очищаем родительский узел от старых шаров
-        this.schedule(this.spawnBalloon, this.spawnInterval); // Запускаем создание с начальным интервалом
+        this.unschedule(this.spawnBalloon); 
+        this.ParentNode.removeAllChildren(); 
+        this.schedule(this.spawnBalloon, this.spawnInterval); 
     }
 
     /**
-     * Метод для изменения интервала между созданием воздушных шаров.
-     * @param newInterval - Новый интервал в секундах
+     * Method to change the interval between balloon creation.
+     * @param newInterval - New interval in seconds
      */
     changeSpawnInterval(newInterval: number) {
-        this.unschedule(this.spawnBalloon); // Останавливаем текущее создание
-        this.schedule(this.spawnBalloon, newInterval); // Запускаем создание с новым интервалом
+        this.unschedule(this.spawnBalloon); 
+        this.schedule(this.spawnBalloon, newInterval); 
     }
 }

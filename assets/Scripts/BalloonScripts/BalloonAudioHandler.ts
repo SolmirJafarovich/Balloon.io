@@ -4,22 +4,20 @@ const { ccclass, property } = _decorator;
 @ccclass('BalloonAudioHandler')
 export class BalloonAudioHandler extends Component {
 
-    // Свойство для хранения компонента AudioSource
+    // Property to store the AudioSource component
     @property(AudioSource)
     public audioSource: AudioSource = null;
 
-    // Метод для воспроизведения звука
+    // Method to play the sound
     play() {
         if (this.audioSource) {
-            // Если компонент AudioSource присутствует, запускаем звук
             this.audioSource.play();
         } else {
-            // Если компонент не найден, выводим сообщение об ошибке
             console.error("AudioSource component not found.");
         }
     }
 
-    // Метод для остановки воспроизведения звука
+    // Method to stop the sound playback
     stop() {
         if (this.audioSource) {
             this.audioSource.stop();

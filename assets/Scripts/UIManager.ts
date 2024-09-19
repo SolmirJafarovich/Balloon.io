@@ -4,59 +4,63 @@ const { ccclass, property } = _decorator;
 @ccclass('UIManager')
 export class UIManager extends Component {
 
-    // Главный UI-узел, который содержит весь интерфейс игры
+    // Main UI node that contains the entire game interface
     @property({
         type: Node
     })
     public userInterface: Node = null;
 
-    // Узел для кнопки старта игры
+    // Node for the start game button
     @property({
         type: Node
     })
     public startButton: Node = null;
 
-    // Узел, содержащий интерфейс для ввода имени пользователя
+    // Node containing the user name input interface
     @property({
         type: Node
     })
     public nameInputHub: Node = null;
 
-    // Узел для открытия каталога
+    // Node for opening the catalog
     @property({
         type: Node
     })
     public catalogOpen: Node = null;
 
-    // Массив экранов смерти для отображения при завершении игры (могут быть разные экраны в зависимости от причины смерти)
+    // Array of death screens to be displayed depending on the cause of death
     @property({
         type: [Node]
     })
     public deathScreens: Node[] = [];
 
-    // Показ стартового экрана с кнопкой старта и возможностью открыть каталог
+    // Show the start screen with the start button and the option to open the catalog
     showStartScreen() {
         this.userInterface.active = true;
         this.startButton.active = true;
-        this.nameInputHub.active = false;  // Прячем интерфейс ввода имени
+        this.nameInputHub.active = false;  // Hide the name input interface
         this.catalogOpen.active = true;
     }
 
-    // Показ экрана смерти в зависимости от переданного кода
+    // Show the death screen based on the provided code
     showDeathScreen(code: number) {
-        this.deathScreens[code].active = true;
+        if (code >= 0 && code < this.deathScreens.length) {
+            this.deathScreens[code].active = true;
+        } else {
+            console.error("Invalid death screen code: ", code);
+        }
     }
 
-    // Скрыть все экраны, включая экраны смерти и каталог
+    // Hide all screens, including death screens and catalog
     hideAllScreens() {
         this.userInterface.active = false;
         
-        // Деактивация всех экранов смерти
+        // Deactivate all death screens
         for (const deathScreen of this.deathScreens) {
             deathScreen.active = false;
         }
 
-        // Прячем кнопку открытия каталога
+        // Hide the catalog open button
         this.catalogOpen.active = false;
     }
 }

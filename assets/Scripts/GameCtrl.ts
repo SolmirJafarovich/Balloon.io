@@ -9,46 +9,46 @@ import { UIManager } from './UIManager';
 @ccclass('GameCtrl')
 export class GameCtrl extends Component {
 
-    // Узел, содержащий компонент менеджера таблицы лидеров
+    // Node containing the LeaderboardManager component
     @property({
-        type:Node
+        type: Node
     })
     public leaderboardManagerNode: Node = null;
 
-    // Узел, содержащий компонент генератора шаров
+    // Node containing the BalloonGenerator component
     @property({
         type: Node
     })
     public balloonGeneratorNode: Node = null;
 
-    // Отображение очков игрока
+    // Label for displaying the player's score
     @property({
-        type:Label
+        type: Label
     })
     public scoreLabel: Label = null;
 
-    // Менеджер UI, отвечающий за управление экранами интерфейса
+    // UIManager responsible for managing UI screens
     @property({
         type: UIManager
     })
     public uiManager: UIManager = null;
 
-    // Текущий счет игрока
+    // Current player's score
     public score: number = 0;
 
-    // Флаг, указывающий, идет ли игра
+    // Flag indicating if the game is running
     public isGameRunning: boolean = false;
 
-    // Менеджер сложности игры
+    // Game difficulty manager
     private difficultyManager: DifficultyManager = null;
 
-    // Генератор шаров
+    // Balloon generator
     public balloonGenerator: BalloonGenerator = null;
 
-    // Менеджер таблицы лидеров
+    // Leaderboard manager
     public leaderboard: LeaderboardManager = null;
-    
-    // Инициализация игры при запуске
+
+    // Initialize the game when the component starts
     start() {
         this.initGame();
         this.leaderboard = this.leaderboardManagerNode.getComponent(LeaderboardManager);
@@ -57,7 +57,7 @@ export class GameCtrl extends Component {
         this.difficultyManager.resetDifficulty();
     }
 
-    // Начальная настройка игры
+    // Initial game setup
     initGame() {
         this.score = 0;
         this.updateScoreLabel();
@@ -65,24 +65,24 @@ export class GameCtrl extends Component {
         this.uiManager.showStartScreen();
     }
 
-    // Обновление метки счета на экране
+    // Update the score label on the screen
     updateScoreLabel() {
         this.scoreLabel.string = `Очки: ${this.score}`;
     }
 
-    // Добавление очков и увеличение сложности, если нужно
+    // Add score and increase difficulty if needed
     addScore(x: number) {
-        if(this.isGameRunning){
+        if (this.isGameRunning) {
             this.score += x;
             this.updateScoreLabel();
-            // Увеличение сложности игры каждые 50 очков
+            // Increase difficulty every 50 points
             if (Math.floor(this.score / 50) > this.difficultyManager.getDifficultyLevel()) {
                 this.difficultyManager.increaseDifficulty(this.balloonGenerator);
             }
         }
     } 
 
-    // Начало игры, скрытие экранов и перезапуск генерации шаров
+    // Start the game, hide screens, and restart balloon generation
     startGame() {
         this.uiManager.hideAllScreens();
         if (this.balloonGenerator) {
@@ -93,9 +93,9 @@ export class GameCtrl extends Component {
         this.isGameRunning = true;
     }
 
-    // Завершение игры, сброс сложности и отображение экрана смерти
+    // End the game, reset difficulty, and show the death screen
     endGame(code: number) {
-        if(this.isGameRunning){
+        if (this.isGameRunning) {
             this.isGameRunning = false;
             this.difficultyManager.resetDifficulty();
             this.uiManager.showDeathScreen(code);

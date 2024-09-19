@@ -8,57 +8,57 @@ import { LeaderboardUI } from './LeaderboardUI';
 @ccclass('LeaderboardManager')
 export class LeaderboardManager extends Component {
 
-    // Поле для ввода имени игрока
+    // Field for entering player name
     @property({
         type: EditBox
     })
     nameInput: EditBox = null;
 
-    // Кнопка отправки имени и очков
+    // Button for submitting name and score
     @property({
         type: Button
     })
     submitButton: Button = null;
 
-    // Узел для отображения поля ввода имени
+    // Node for displaying the name input field
     @property({
         type: Node
     })
     nameInputHub: Node = null;
 
-    // Кнопка для начала новой игры
+    // Button to start a new game
     @property({
         type: Button
     })
     playButton: Button = null;
 
-    // Основной интерфейс пользователя
+    // Main user interface
     @property({
         type: Node
     })
     userInterface: Node = null;
 
-    // Узел, содержащий компонент GameCtrl
+    // Node containing the GameCtrl component
     @property({
         type: Node
     })
     public gameCtrlNode: Node = null;
 
-    // Ссылка на компонент LeaderboardUI для отображения таблицы лидеров
+    // Reference to LeaderboardUI for displaying the leaderboard
     @property(LeaderboardUI)
     leaderboardUI: LeaderboardUI = null;
 
-    // Ссылка на GameCtrl для управления игровым процессом
+    // Reference to GameCtrl for managing the game
     private gameCtrl: GameCtrl = null;
 
-    // Сервис для обработки таблицы лидеров
+    // Service for handling the leaderboard
     private leaderboardService: LeaderboardService = new LeaderboardService();
 
     onLoad() {
-        // Получаем компонент GameCtrl из узла
+        // Get the GameCtrl component from the node
         this.gameCtrl = this.gameCtrlNode.getComponent(GameCtrl);
 
-        // Проверяем наличие всех необходимых компонентов
+        // Check for the presence of all required components
         if (!this.gameCtrl) {
             console.error("GameCtrl is not set!");
             return;
@@ -76,17 +76,17 @@ export class LeaderboardManager extends Component {
 
         this.leaderboardService.addScore("BBQ", 513);
 
-        // Инициализируем LeaderboardUI с нашим сервисом
+        // Initialize LeaderboardUI with our service
         this.leaderboardUI.init(this.leaderboardService);
 
-        // Назначаем обработчики событий для кнопок
+        // Assign event handlers for the buttons
         this.submitButton.node.on('click', this.onSubmitClicked, this);
         this.playButton.node.on('click', this.onPlayClicked, this);
     }
 
     /**
-     * Инициализирует менеджер таблицы лидеров с переданным сервисом.
-     * @param service - Экземпляр LeaderboardService
+     * Initializes the leaderboard manager with the provided service.
+     * @param service - An instance of LeaderboardService
      */
     init(service: LeaderboardService) {
         this.leaderboardService = service;
@@ -94,8 +94,8 @@ export class LeaderboardManager extends Component {
     }
 
     /**
-     * Обработчик нажатия на кнопку отправки имени и очков.
-     * Проверяет корректность введенного имени, добавляет результат в таблицу лидеров.
+     * Handler for the submit button click event.
+     * Checks the validity of the entered name and adds the result to the leaderboard.
      */
     onSubmitClicked() {
         const playerName = this.nameInput.string;
@@ -106,17 +106,17 @@ export class LeaderboardManager extends Component {
             return;
         }
 
-        // Добавляем результат игрока в таблицу лидеров
+        // Add the player's result to the leaderboard
         this.leaderboardService.addScore(playerName, playerScore);
 
-        // Скрываем поле ввода имени и отображаем кнопку начала игры
+        // Hide the name input field and display the start game button
         this.nameInputHub.active = false;
         this.playButton.node.active = true;
 
-        // Обновляем таблицу лидеров
+        // Update the leaderboard
         this.leaderboardUI.updateLeaderboard();
 
-        // Сбрасываем очки и обновляем отображение
+        // Reset the score and update the display
         if (this.gameCtrl) {
             this.gameCtrl.score = 0;
             this.gameCtrl.updateScoreLabel();
@@ -126,8 +126,8 @@ export class LeaderboardManager extends Component {
     }
 
     /**
-     * Обработчик нажатия на кнопку "Играть".
-     * Запускает новую игру.
+     * Handler for the play button click event.
+     * Starts a new game.
      */
     onPlayClicked() {
         if (this.gameCtrl) {

@@ -4,88 +4,88 @@ const { ccclass, property } = _decorator;
 @ccclass('BalloonCatalog')
 export class BalloonCatalog extends Component {
 
-    // Список префабов воздушных шаров, которые будут отображаться в каталоге
+    // List of balloon prefabs to be displayed in the catalog
     @property({
         type: [Prefab]
     })
     public balloonPrefabs: Prefab[] = [];
 
-    // Родительский узел, в который будут добавляться шарики
+    // Parent node where balloons will be added
     @property({
         type: Node
     })
     public parentNode: Node = null;
 
-    // Узел с кнопками навигации
+    // Node with navigation buttons
     @property({
         type: Node
     })
     public navigationButtons: Node = null;
 
-    // Кнопка для перехода к следующему шару
+    // Button to go to the next balloon
     @property({
         type: Button
     })
     public nextButton: Button = null;
 
-    // Кнопка для перехода к предыдущему шару
+    // Button to go to the previous balloon
     @property({
         type: Button
     })
     public prevButton: Button = null;
 
-    // Кнопка для выхода из каталога
+    // Button to exit the catalog
     @property({
         type: Button
     })
     public exitButton: Button = null;
 
-    // Индекс текущего отображаемого шара
+    // Index of the currently displayed balloon
     public currentIdx: number = 0;
 
-    // Текущий отображаемый шар 
+    // Currently displayed balloon 
     private currentBalloon: Node = null; 
 
-    // Метод, вызываемый при инициализации компонента
+    // Method called when the component is initialized
     onLoad() {
         this.nextButton.node.on(Button.EventType.CLICK, this.showNextBalloon, this);
         this.prevButton.node.on(Button.EventType.CLICK, this.showPreviousBalloon, this);
         this.exitButton.node.on(Button.EventType.CLICK, this.exitCatalog, this);
 
-        // Отображение первого шара при загрузке
+        // Show the first balloon on load
         this.showBalloon(this.currentIdx);
     }
 
-    // Метод для отображения шара по заданному индексу
+    // Displays the balloon at the specified index
     showBalloon(index: number) {
         if (this.currentBalloon) {
             this.currentBalloon.destroy();
         }
 
-        // Проверяем, что индекс находится в пределах доступных префабов
+        // Ensure the index is within the valid range
         if (index >= 0 && index < this.balloonPrefabs.length) {
             const balloonPrefab = this.balloonPrefabs[index];
-            // Создаем новый экземпляр шара и добавляем его в родительский узел
+            // Create a new balloon instance and add it to the parent node
             this.currentBalloon = instantiate(balloonPrefab);
             this.parentNode.addChild(this.currentBalloon);
         }
     }
 
-    // Метод для показа следующего шара
+    // Shows the next balloon
     showNextBalloon() {
-        // Увеличиваем индекс, а затем отображаем шар с этим индексом
+        // Increment the index and display the balloon with this index
         this.currentIdx = (this.currentIdx + 1) % this.balloonPrefabs.length;
         this.showBalloon(this.currentIdx);
     }
 
-    // Метод для показа предыдущего шара
+    // Shows the previous balloon
     showPreviousBalloon() {
-        // Уменьшаем индекс, учитывая количество префабов, затем отображаем шар
+        // Decrement the index, considering the number of prefabs, and display the balloon
         this.currentIdx = (this.currentIdx - 1 + this.balloonPrefabs.length) % this.balloonPrefabs.length;
         this.showBalloon(this.currentIdx);
     }
 
-    // Метод для выхода из каталога (скрытие интерфейса)
+    // Exits the catalog (hides the interface)
     exitCatalog() {
         this.navigationButtons.active = false;
         this.node.active = false;  

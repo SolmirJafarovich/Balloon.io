@@ -3,19 +3,19 @@ const { ccclass, property } = _decorator;
 
 @ccclass('DifficultyManager')
 export class DifficultyManager extends Component {
-    // Начальный интервал между созданием воздушных шаров
+    // Initial interval between balloon spawns
     @property
     public initialSpawnInterval: number = 1;
 
-    // Текущий интервал между созданием воздушных шаров
+    // Current interval between balloon spawns
     private spawnInterval: number = 1;
 
-    // Уровень сложности игры
+    // Game difficulty level
     private difficultyLevel: number = 0;
 
     /**
-     * Конструктор класса DifficultyManager.
-     * @param initialInterval - Начальный интервал между созданием воздушных шаров.
+     * Constructor for the DifficultyManager class.
+     * @param initialInterval - Initial interval between balloon spawns.
      */
     constructor(initialInterval: number) {
         super();
@@ -23,24 +23,24 @@ export class DifficultyManager extends Component {
     }
 
     /**
-     * Увеличивает уровень сложности, уменьшая интервал между созданием воздушных шаров.
-     * @param balloonGenerator - Объект генератора воздушных шаров, для изменения интервала.
+     * Increases the difficulty by reducing the interval between balloon spawns.
+     * @param balloonGenerator - Balloon generator object to change the interval.
      */
     public increaseDifficulty(balloonGenerator: any) {
-        this.difficultyLevel += 1; 
-        this.spawnInterval -= this.spawnInterval * 0.1; // Уменьшение интервала на 10%
-        balloonGenerator.changeSpawnInterval(this.spawnInterval); 
+        this.difficultyLevel += 1;
+        this.spawnInterval -= this.spawnInterval * 0.1; // Reduce the interval by 10%
+        balloonGenerator.changeSpawnInterval(this.spawnInterval);
     }
 
-    // Сбрасывает уровень сложности и интервал между созданием воздушных шаров к начальному значению.
+    // Resets the difficulty level and the interval between balloon spawns to the initial value.
     public resetDifficulty() {
         this.difficultyLevel = 0;
-        this.spawnInterval = this.initialSpawnInterval; 
+        this.spawnInterval = this.initialSpawnInterval;
     }
 
     /**
-     * Возвращает текущий уровень сложности.
-     * @returns Текущий уровень сложности.
+     * Returns the current difficulty level.
+     * @returns The current difficulty level.
      */
     public getDifficultyLevel() {
         return this.difficultyLevel;

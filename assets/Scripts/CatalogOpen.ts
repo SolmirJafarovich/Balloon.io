@@ -4,30 +4,30 @@ const { ccclass, property } = _decorator;
 @ccclass('CatalogOpen')
 export class CatalogOpen extends Component {
 
-    // Узел, который используется для открытия каталога
+    // Node used to trigger the opening of the catalog
     @property({
         type: Node
     })
     public openNode: Node = null;
 
-    // Узел, представляющий сам каталог шаров
+    // Node representing the catalog itself
     @property({
         type: Node
     })
     public catalog: Node = null;
 
-    // Узел с кнопками навигации по каталогу
+    // Node containing the catalog navigation buttons
     @property({
         type: Node
     })
     public navigationButtons: Node = null;
 
-    // Метод, вызываемый при инициализации компонента
+    // Method called when the component is initialized
     onLoad() {
         this.node.on(Node.EventType.TOUCH_START, this.onTouch, this);
     }
 
-    // Метод, который вызывается при клике на узел
+    // Method triggered when a touch event occurs on the node
     onTouch() {
         this.catalog.active = true;
         this.navigationButtons.active = true;
